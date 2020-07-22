@@ -87,6 +87,12 @@ class Polygon(Figure):
         self._g = a.dist(self.fixed_point) + b.dist(self.fixed_point) + \
             c.dist(self.fixed_point)
 
+        self.rectangle.add_crossing(a, b)  # Проверяем, пересекает ли отрезок какую-либо из граней
+        self.rectangle.add_crossing(b, c)  # Проверяем, пересекает ли отрезок какую-либо из граней
+        # Добавляем в Дек вершины прямоугольника, которые находятся внутри выпуклой оболочки,
+        # чтобы корректно считать площадь, если НЕТ пересечения
+        self.rectangle.add_inside(a, c, b)
+
     def perimeter(self):
         return self._perimeter
 
@@ -115,6 +121,9 @@ class Polygon(Figure):
                                            self.points.first()))
             self.rectangle.add_crossing(self.points.first(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
             self.rectangle.add_crossing(self.points.last(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
+            # Добавляем в Дек вершины прямоугольника, которые находятся внутри выпуклой оболочки,
+            # чтобы корректно считать площадь, если НЕТ пересечения
+            self.rectangle.add_inside(self.points.first(), self.points.last(), t)
 
             # удаление освещённых рёбер из начала дека
             p = self.points.pop_first()
@@ -142,6 +151,9 @@ class Polygon(Figure):
 
             self.rectangle.add_crossing(self.points.first(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
             self.rectangle.add_crossing(self.points.last(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
+            # Добавляем в Дек вершины прямоугольника, которые находятся внутри выпуклой оболочки,
+            # чтобы корректно считать площадь, если НЕТ пересечения
+            self.rectangle.add_inside(self.points.first(), self.points.last(), t)
 
 
         return self

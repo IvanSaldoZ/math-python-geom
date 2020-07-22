@@ -56,9 +56,10 @@ def add_pt_and_draw(f, tk, x=None,y=None):
 
 print("\nТочки плоскости")
 try:
-    f = add_pt_and_draw(f, tk, -2.0, 0.0)
-    f = add_pt_and_draw(f, tk, 0.0, 2.0)
-    f = add_pt_and_draw(f, tk, 2.0, 0.0)
+    f = add_pt_and_draw(f, tk, -4.0, 0.0)
+    f = add_pt_and_draw(f, tk, 0.0, 4.0)
+    f = add_pt_and_draw(f, tk, 4.0, 0.0)
+    f = add_pt_and_draw(f, tk, 0.0, -4.0)
 
     while True:
         f = add_pt_and_draw(f, tk)

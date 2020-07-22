@@ -276,6 +276,14 @@ class R2Point:
 
 
 
+    def is_inside_of_triang(self,a,b,c):
+        """
+        Находится ли точка self внутри треугольника a,b,c (вычисляем через ориентацию)
+        """
+        return self.orient(a,b)==self.orient(b,c)==self.orient(c,a)
+
+
+
 if __name__ == "__main__":
     x = R2Point(1.0, 1.0)
     print(type(x), x.__dict__)

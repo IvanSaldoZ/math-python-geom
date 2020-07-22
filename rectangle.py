@@ -40,24 +40,9 @@ class Rectangle:
 
     def common_perimeter(self):
         """
-        Возвращаем общую площадь
+        Возвращаем общие периметр
         """
         return self._common_perimeter
-
-
-
-    def find_common_area3(self, a, b, c):
-        """
-        Находим добавочную площадь для нашего прямоугольника и трех точек (первоначально)
-        """
-        # Если все три точки внутри нашего прямоугольника, то площадь просто равно площади выпуклой фигуры
-        print('OK1')
-        print(a)
-        print(b)
-        #print(self.vertex1)
-        #print(self.vertex4)
-        exit()
-
 
     def add_crossing(self, a, b):
         """
@@ -83,10 +68,24 @@ class Rectangle:
         # Оставляем только уникальные точки
         crossing_points = self.uniq(crossing_points)
         for point in crossing_points:
-            print('Checking point:',point)
-            print(self.add_common_point(point))
-        print('Rect Deque:',self.common_points.size())
-        print('Common area:',self.common_area())
+            #print('Checking point:',point)
+            #print(self.add_common_point(point))
+            self.add_common_point(point)
+        #print('Rect Deque:',self.common_points.size())
+        #print('Common area:',self.common_area())
+
+    def add_inside(self, a,b,c):
+        """
+        Проверяем вершины прямоугольника, которые попали внутрь выпуклой оболочки и добавляем их в общие точки
+        Этот метод нужен тогда, когда общих пересечений у выпуклой оболочки нет, но сами вершины прямоугольника
+        являются точками, которые надо учитывать
+        Передаются три новых точки выпуклой оболочки, которые дают нам новую площадь
+        """
+        for i in range(4):
+            if self.verts[i].is_inside_of_triang(a,b,c):
+                self.add_common_point(self.verts[i])
+        #print('Rect Deque (inner point):', self.common_points.size())
+        #print('Common area (inner point):', self.common_area())
 
     # Оставляем только уникальные значения в списк
     def uniq(self, lst):
