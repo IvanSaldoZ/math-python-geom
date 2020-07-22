@@ -2,6 +2,7 @@
 from tk_drawer import TkDrawer
 from r2point import R2Point
 from convex import Figure, Void, Point, Segment, Polygon
+from rectangle import Rectangle
 
 
 def void_draw(self, tk):
@@ -29,41 +30,40 @@ setattr(Segment, 'draw', segment_draw)
 setattr(Polygon, 'draw', polygon_draw)
 
 
-print("Старое задание: Заданная точка")
-Figure.fixed_point = R2Point(0.0, 0.0)
+#print("Старое задание: Заданная точка")
+#Figure.fixed_point = R2Point(0.0, 0.0)
 
 
-print("Задание #73 (Сальдиков): Вершина #1 многоугольника, параллельного осям координат")
-Figure.vertex1 = R2Point(-1.0, -1.0)
+#print("Задание #73 (Сальдиков): Вершина #1 многоугольника, параллельного осям координат")
+#Figure.vertex1 = R2Point(-1.0, -1.0)
 
 
-print("Задание #73 (Сальдиков): Вершина #2 многоугольника, параллельного осям координат")
-Figure.vertex2 = R2Point(1.0, 1.0)
+#print("Задание #73 (Сальдиков): Вершина #2 многоугольника, параллельного осям координат")
+#Figure.vertex2 = R2Point(1.0, 1.0)
 
 
 tk = TkDrawer()
 f = Void()
 tk.clean()
+rect = Rectangle()
+
+def add_pt_and_draw(f, tk, x=None,y=None):
+    f = f.add(R2Point(x,y))
+    tk.clean()
+    f.draw(tk)
+    print(f"S = {f.area()}, P = {f.perimeter()}, g = {f.g()}\n")
+    return f
 
 print("\nТочки плоскости")
 try:
-    f = f.add(R2Point(-2.0,0.0))
-    tk.clean()
-    f.draw(tk)
-    print(f"S = {f.area()}, P = {f.perimeter()}, g = {f.g()}, g73 = {f.g73()}\n")
-    f = f.add(R2Point(0.0,2.0))
-    tk.clean()
-    f.draw(tk)
-    print(f"S = {f.area()}, P = {f.perimeter()}, g = {f.g()}, g73 = {f.g73()}\n")
-    f = f.add(R2Point(2.0, 0.0))
-    tk.clean()
-    f.draw(tk)
-    print(f"S = {f.area()}, P = {f.perimeter()}, g = {f.g()}, g73 = {f.g73()}\n")
+    f = add_pt_and_draw(f, tk, -2.0, 0.0)
+    f = add_pt_and_draw(f, tk, 0.0, 2.0)
+    f = add_pt_and_draw(f, tk, 2.0, 0.0)
+    f = add_pt_and_draw(f, tk, 0.0, -2.0)
+
     while True:
-        f = f.add(R2Point())
-        tk.clean()
-        f.draw(tk)
-        print(f"S = {f.area()}, P = {f.perimeter()}, g = {f.g()}, g73 = {f.g73()}\n")
+        f = add_pt_and_draw(f, tk)
+
 except(EOFError, KeyboardInterrupt):
     print("\nStop")
     tk.close()

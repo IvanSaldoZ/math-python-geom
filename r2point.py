@@ -13,6 +13,10 @@ class R2Point:
             y = float(input("y -> "))
         self.x, self.y = x, y
 
+    # Представление при печате print-ом
+    def __repr__(self):
+        return f'R2Point: ({self.x}, {self.y})'
+
     # Площадь треугольника
     @staticmethod
     def area(a, b, c):

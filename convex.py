@@ -1,31 +1,13 @@
 from deq import Deq
 from r2point import R2Point
+from rectangle import Rectangle
 
 
 class Figure:
     """ Абстрактная фигура """
 
-    # Значения противоположных вершин прямоугольника внутри которого ищется общая площадь с выпуклой оболочкой
-    vertex1 = R2Point(-1.0, -1.0)
-    vertex2 = R2Point(1.0, 1.0)
-    # Остальные вершины - это просто зеркальные координаты, чтобы получился прямоугольник
-    vertex3 = R2Point(vertex1.x, vertex2.y)
-    vertex4 = R2Point(vertex2.x, vertex1.y)
-
-    def __init__(self):
-        pass
-
-    # def vertex1(self):
-    #     return self._vertex1
-    #
-    # def vertex2(self):
-    #     return self._vertex2
-    #
-    # def vertex3(self):
-    #     return self._vertex3
-    #
-    # def vertex4(self):
-    #     return self._vertex4
+    rectangle = Rectangle() # Сразу создаем прямоугольник
+    fixed_point = R2Point(0.0, 0.0)
 
     def perimeter(self):
         return 0.0
@@ -35,10 +17,6 @@ class Figure:
 
     def g(self):
         return None
-
-    def g73(self):
-        """По умолчанию возвращается общая площадь 0"""
-        return 0.0
 
 
 class Void(Figure):
@@ -52,11 +30,14 @@ class Point(Figure):
     """ "Одноугольник" """
 
     def __init__(self, p):
-        super().__init__()
         self.p = p
 
     def add(self, q):
-        return self if self.p == q else Segment(self.p, q)
+        if self.p == q:
+            return self
+        else:
+            self.rectangle.add_crossing(self.p, q)  # Проверяем, пересекает ли отрезок какую-либо из граней
+            return Segment(self.p, q)
 
     def g(self):
         return self.p.dist(self.fixed_point)
@@ -66,7 +47,6 @@ class Segment(Figure):
     """ "Двуугольник" """
 
     def __init__(self, p, q):
-        super().__init__()
         self.p, self.q = p, q
 
     def perimeter(self):
@@ -74,10 +54,14 @@ class Segment(Figure):
 
     def add(self, r):
         if R2Point.is_triangle(self.p, self.q, r):
+            self.rectangle.add_crossing(self.p, r)  # Проверяем, пересекает ли отрезок какую-либо из граней
+            self.rectangle.add_crossing(self.q, r)  # Проверяем, пересекает ли отрезок какую-либо из граней
             return Polygon(self.p, self.q, r)
         elif self.q.is_inside(self.p, r):
+            self.rectangle.add_crossing(self.p, r)  # Проверяем, пересекает ли отрезок какую-либо из граней
             return Segment(self.p, r)
         elif self.p.is_inside(r, self.q):
+            self.rectangle.add_crossing(r, self.q)  # Проверяем, пересекает ли отрезок какую-либо из граней
             return Segment(r, self.q)
         else:
             return self
@@ -90,7 +74,6 @@ class Polygon(Figure):
     """ Многоугольник """
 
     def __init__(self, a, b, c):
-        super().__init__()
         self.points = Deq()
         self.points.push_first(b)
         if b.is_light(a, c):
@@ -103,39 +86,6 @@ class Polygon(Figure):
         self._area = abs(R2Point.area(a, b, c))
         self._g = a.dist(self.fixed_point) + b.dist(self.fixed_point) + \
             c.dist(self.fixed_point)
-        self._g73 = self.find_common_area3(a,b,c)
-
-
-    def find_common_area3(self, a, b, c):
-        """
-        Находим добавочную площадь для нашего прямоугольника и трех точек (первоначально)
-        """
-        # Если все три точки внутри нашего прямоугольника, то площадь просто равно площади выпуклой фигуры
-        print('OK1')
-        print(a.x,a.y)
-        print(b.x,b.y)
-        print(self.vertex1.x, self.vertex1.y, )
-        print(self.vertex4.x, self.vertex4.y, )
-        print(self.find_crossing(a, b, self.vertex1, self.vertex4))
-        print(self.find_crossing(a, b, self.vertex4, self.vertex2))
-        print(self.find_crossing(a, b, self.vertex2, self.vertex3))
-        print(self.find_crossing(a, b, self.vertex3, self.vertex1))
-        if a.is_inside(self.vertex1, self.vertex2) \
-        and b.is_inside(self.vertex1, self.vertex2)  \
-        and c.is_inside(self.vertex1, self.vertex2):
-            return self.area()
-
-    def find_crossing(self, a, b, q, p):
-        """
-        Находим пересечение точек от ребер с каким-либо отрезком прямоугольника
-        """
-        print('---------')
-        print('---------')
-        return R2Point.seg2seg(a, b, q, p)
-
-
-
-
 
     def perimeter(self):
         return self._perimeter
@@ -145,9 +95,6 @@ class Polygon(Figure):
 
     def g(self):
         return self._g
-
-    def g73(self):
-        return self._g73
 
     # добавление новой точки
     def add(self, t):
@@ -166,6 +113,8 @@ class Polygon(Figure):
             self._area += abs(R2Point.area(t,
                                            self.points.last(),
                                            self.points.first()))
+            self.rectangle.add_crossing(self.points.first(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
+            self.rectangle.add_crossing(self.points.last(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
 
             # удаление освещённых рёбер из начала дека
             p = self.points.pop_first()
@@ -191,7 +140,13 @@ class Polygon(Figure):
             self.points.push_first(t)
             self._g += t.dist(self.fixed_point)
 
+            self.rectangle.add_crossing(self.points.first(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
+            self.rectangle.add_crossing(self.points.last(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
+
+
         return self
+
+
 
 
 if __name__ == "__main__":
