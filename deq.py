@@ -8,6 +8,14 @@ class Deq:
     def __init__(self):
         self.array = []
 
+    # Итератор по элементам (нужно, чтобы проверять наличие точки в деке)
+    def __iter__(self):
+        yield from self.array
+
+    # Представление очереди точек
+    def __repr__(self):
+        return self.array.__str__()
+
     # Количество элементов в деке
     def size(self):
         return len(self.array)

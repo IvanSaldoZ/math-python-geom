@@ -6,8 +6,8 @@ from rectangle import Rectangle
 class Figure:
     """ Абстрактная фигура """
 
-    rectangle = Rectangle() # Сразу создаем прямоугольник
     fixed_point = R2Point(0.0, 0.0)
+    rectangle = Rectangle()
 
     def perimeter(self):
         return 0.0
@@ -17,6 +17,12 @@ class Figure:
 
     def g(self):
         return None
+
+    def g73(self):
+        """
+        По умолчанию площадь пересечения равна нулю
+        """
+        return 0
 
 
 class Void(Figure):
@@ -54,8 +60,6 @@ class Segment(Figure):
 
     def add(self, r):
         if R2Point.is_triangle(self.p, self.q, r):
-            self.rectangle.add_crossing(self.p, r)  # Проверяем, пересекает ли отрезок какую-либо из граней
-            self.rectangle.add_crossing(self.q, r)  # Проверяем, пересекает ли отрезок какую-либо из граней
             return Polygon(self.p, self.q, r)
         elif self.q.is_inside(self.p, r):
             self.rectangle.add_crossing(self.p, r)  # Проверяем, пересекает ли отрезок какую-либо из граней
@@ -68,6 +72,12 @@ class Segment(Figure):
 
     def g(self):
         return self.fixed_point.dist(self.p) + self.fixed_point.dist(self.q)
+
+    def g73(self):
+        """
+        Возвращаем общую площадь прямоугольника и выпуклой оболочки
+        """
+        return self.rectangle.common_area()
 
 
 class Polygon(Figure):
@@ -87,11 +97,11 @@ class Polygon(Figure):
         self._g = a.dist(self.fixed_point) + b.dist(self.fixed_point) + \
             c.dist(self.fixed_point)
 
-        self.rectangle.add_crossing(a, b)  # Проверяем, пересекает ли отрезок какую-либо из граней
         self.rectangle.add_crossing(b, c)  # Проверяем, пересекает ли отрезок какую-либо из граней
+        self.rectangle.add_crossing(b, a)  # Проверяем, пересекает ли отрезок какую-либо из граней
         # Добавляем в Дек вершины прямоугольника, которые находятся внутри выпуклой оболочки,
         # чтобы корректно считать площадь, если НЕТ пересечения
-        self.rectangle.add_inside(a, c, b)
+        self.rectangle.add_inside(a, b, c)
 
     def perimeter(self):
         return self._perimeter
@@ -101,10 +111,15 @@ class Polygon(Figure):
 
     def g(self):
         return self._g
+    
+    def g73(self):
+        """
+        Возвращаем общую площадь прямоугольника и выпуклой оболочки
+        """
+        return self.rectangle.common_area()
 
     # добавление новой точки
     def add(self, t):
-
         # поиск освещённого ребра
         for n in range(self.points.size()):
             if t.is_light(self.points.last(), self.points.first()):
@@ -154,7 +169,6 @@ class Polygon(Figure):
             # Добавляем в Дек вершины прямоугольника, которые находятся внутри выпуклой оболочки,
             # чтобы корректно считать площадь, если НЕТ пересечения
             self.rectangle.add_inside(self.points.first(), self.points.last(), t)
-
 
         return self
 

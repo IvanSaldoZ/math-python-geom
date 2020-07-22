@@ -6,6 +6,17 @@ class Rectangle:
     Обчный прямоугольник, общую площадь с которым нужно найти
     """
 
+    # SINGLETON
+    # instance = None
+    # def __new__(cls):  # При создании объекта
+    #     """
+    #     Реализация SINGLETON
+    #     """
+    #     if cls.instance is None:
+    #         cls.instance = super().__new__(cls)
+    #     return cls.instance
+
+
     # Вершины прямоугольника внутри которого ищется общая площадь с выпуклой оболочкой
     # Задаем по умолчанию хоть какое-то значение
     verts = [R2Point(-1.0, -1.0), R2Point(1.0, -1.0), R2Point(1.0, 1.0), R2Point(-1.0, 1.0)]
@@ -56,23 +67,27 @@ class Rectangle:
         if crossing_points_bottom is not None:
             crossing_points.append(crossing_points_bottom[0])
             crossing_points.append(crossing_points_bottom[1])
+            print('OK1')
         if crossing_points_right is not None:
             crossing_points.append(crossing_points_right[0])
             crossing_points.append(crossing_points_right[1])
+            print('OK2')
         if crossing_points_top is not None:
             crossing_points.append(crossing_points_top[0])
             crossing_points.append(crossing_points_top[1])
+            print('OK3')
         if crossing_points_left is not None:
             crossing_points.append(crossing_points_left[0])
             crossing_points.append(crossing_points_left[1])
+            print('OK4')
         # Оставляем только уникальные точки
         crossing_points = self.uniq(crossing_points)
         for point in crossing_points:
-            #print('Checking point:',point)
+            print('Checking point:',point)
             #print(self.add_common_point(point))
             self.add_common_point(point)
-        #print('Rect Deque:',self.common_points.size())
-        #print('Common area:',self.common_area())
+        print('Rect Deque:',self.common_points.size())
+        print('Common area:',self.common_area())
 
     def add_inside(self, a,b,c):
         """
@@ -84,8 +99,8 @@ class Rectangle:
         for i in range(4):
             if self.verts[i].is_inside_of_triang(a,b,c):
                 self.add_common_point(self.verts[i])
-        #print('Rect Deque (inner point):', self.common_points.size())
-        #print('Common area (inner point):', self.common_area())
+        print('Rect Deque (inner point):', self.common_points.size())
+        print('Common area (inner point):', self.common_area())
 
     # Оставляем только уникальные значения в списк
     def uniq(self, lst):
@@ -104,9 +119,12 @@ class Rectangle:
 
     # добавление новой точки в массив точек общей площади
     def add_common_point(self, t):
-        # Поначалу просто наберем хотя бы три точки
+        # Если такая точка уже есть, то ничего не делаем
+        if t in self.common_points:
+            return self
+        # Поначалу просто наберем хотя бы одну точку
         if self.common_points.size() <= 1:
-            self.common_points.push_last(t)
+            self.common_points.push_first(t)
         else:
             # поиск освещённого ребра
             for n in range(self.common_points.size()):
@@ -143,5 +161,5 @@ class Rectangle:
                 self._common_perimeter +=  t.dist(self.common_points.first()) + \
                                         t.dist(self.common_points.last())
                 self.common_points.push_first(t)
-
+        #print('Common Points:', self.common_points)
         return self

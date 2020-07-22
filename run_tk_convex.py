@@ -2,7 +2,6 @@
 from tk_drawer import TkDrawer
 from r2point import R2Point
 from convex import Figure, Void, Point, Segment, Polygon
-from rectangle import Rectangle
 
 
 def void_draw(self, tk):
@@ -45,13 +44,12 @@ setattr(Polygon, 'draw', polygon_draw)
 tk = TkDrawer()
 f = Void()
 tk.clean()
-rect = Rectangle()
 
 def add_pt_and_draw(f, tk, x=None,y=None):
     f = f.add(R2Point(x,y))
     tk.clean()
     f.draw(tk)
-    print(f"S = {f.area()}, P = {f.perimeter()}, g = {f.g()}\n")
+    print(f"S = {f.area()}, P = {f.perimeter()}, g = {f.g()}, g73 = {f.g73()}\n")
     return f
 
 print("\nТочки плоскости")
@@ -60,6 +58,12 @@ try:
     f = add_pt_and_draw(f, tk, 0.0, 4.0)
     f = add_pt_and_draw(f, tk, 4.0, 0.0)
     f = add_pt_and_draw(f, tk, 0.0, -4.0)
+
+    # f = add_pt_and_draw(f, tk, -1.0, -1.0)
+    # f = add_pt_and_draw(f, tk, 1.0, 1.0)
+    # f = add_pt_and_draw(f, tk, -1.0, 1.0)
+#    f = add_pt_and_draw(f, tk, 0.0, -4.0)
+
 
     while True:
         f = add_pt_and_draw(f, tk)
