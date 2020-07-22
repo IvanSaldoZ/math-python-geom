@@ -1,4 +1,5 @@
 from math import sqrt
+
 from pytest import approx
 
 
@@ -29,7 +30,7 @@ class R2Point:
 
     # Расстояние до другой точки
     def dist(self, other):
-        return sqrt((other.x - self.x)**2 + (other.y - self.y)**2)
+        return sqrt((other.x - self.x) ** 2 + (other.y - self.y) ** 2)
 
     # Лежит ли точка внутри "стандартного" прямоугольника?
     def is_inside(self, a, b):
@@ -89,18 +90,18 @@ class R2Point:
 
     # Расстояние до прямой ax + by +c = 0
     def dist2line(self, a, b, c):
-        return abs(a*self.x + b*self.y + c) / sqrt(a*a + b*b)
+        return abs(a * self.x + b * self.y + c) / sqrt(a * a + b * b)
 
     # Расстояние до отрезка (возможно вырожденного)
     def dist2segment(self, p, q):
         # Коэффициенты общего уравнения прямой
-        a = p.y-q.y
-        b = q.x-p.x
+        a = p.y - q.y
+        b = q.x - p.x
         # c = p.x*q.y-q.x*p.y
 
         # Точка в полосе?
-        if (p - q).dot(self-q) > 0 and (q - p).dot(self - p) > 0:
-            return abs(a*self.x+b*self.y+p.x*q.y-q.x*p.y)/sqrt(a*a+b*b)
+        if (p - q).dot(self - q) > 0 and (q - p).dot(self - p) > 0:
+            return abs(a * self.x + b * self.y + p.x * q.y - q.x * p.y) / sqrt(a * a + b * b)
         else:
             return min(self.dist(p), self.dist(q))
 
@@ -153,7 +154,7 @@ class R2Point:
     # до прямой ax + by + c = 0
     @staticmethod
     def dist_seg2line(p, q, a, b, c):
-        if (a*p.x + b*p.y + c) * (a*q.x + b*q.y + c) <= 0.0:
+        if (a * p.x + b * p.y + c) * (a * q.x + b * q.y + c) <= 0.0:
             return 0.0
         else:
             return min(p.dist2line(a, b, c), q.dist2line(a, b, c))
@@ -168,7 +169,7 @@ class R2Point:
         # внутреннюю для них обоих точку) тогда и только тогда, когда
         # каждый из них освещён ровно из одного конца другого!
         if r.is_light(p, q) != s.is_light(p, q) and \
-           p.is_light(r, s) != q.is_light(r, s):
+                p.is_light(r, s) != q.is_light(r, s):
             return 0.0
         else:
             # В этом случае отрезки не обязательно не имеют общих точек —
@@ -208,9 +209,9 @@ class R2Point:
 
         # Общий случай
         if ro != so and po != qo:
-            t = ((r.x-q.x)*(r.y-s.y) - (r.x-s.x)*(r.y-q.y)) / \
-                ((p.x-q.x)*(r.y-s.y) - (p.y-q.y)*(r.x-s.x))
-            z = R2Point(p.x*t+q.x*(1.0-t), p.y*t+q.y*(1.0-t))
+            t = ((r.x - q.x) * (r.y - s.y) - (r.x - s.x) * (r.y - q.y)) / \
+                ((p.x - q.x) * (r.y - s.y) - (p.y - q.y) * (r.x - s.x))
+            z = R2Point(p.x * t + q.x * (1.0 - t), p.y * t + q.y * (1.0 - t))
             return (z, z)
 
         # Вырожденные отрезки
@@ -274,14 +275,11 @@ class R2Point:
             else:
                 return None if len(r) == 0 else (r[0][0], r[1][0])
 
-
-
-    def is_inside_of_triang(self,a,b,c):
+    def is_inside_of_triang(self, a, b, c):
         """
         Находится ли точка self внутри треугольника a,b,c (вычисляем через ориентацию)
         """
-        return self.orient(a,b)==self.orient(b,c)==self.orient(c,a)
-
+        return self.orient(a, b) == self.orient(b, c) == self.orient(c, a)
 
 
 if __name__ == "__main__":

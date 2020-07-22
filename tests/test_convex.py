@@ -1,7 +1,9 @@
-from pytest import approx
 from math import sqrt
-from r2point import R2Point
+
+from pytest import approx
+
 from convex import Figure, Void, Point, Segment, Polygon
+from r2point import R2Point
 from rectangle import Rectangle
 
 
@@ -35,7 +37,6 @@ class TestVoid:
     # Площадь пересечения - нулевая
     def test_g73_area_segment(self):
         assert self.f.g73() == 0.0
-
 
 
 class TestPoint:
@@ -76,8 +77,6 @@ class TestPoint:
     # Площадь пересечения - нулевая
     def test_g73_area_point(self):
         assert self.f.g73() == 0.0
-
-
 
 
 class TestSegment:
@@ -124,7 +123,6 @@ class TestSegment:
         assert self.f.g73() == 0.0
 
 
-
 class TestPolygon:
 
     # Инициализация (выполняется для каждого из тестов класса)
@@ -152,14 +150,17 @@ class TestPolygon:
     #   изначально их три
     def test_vertexes1(self):
         assert self.f.points.size() == 3
+
     #   добавление точки внутрь многоугольника не меняет их количества
 
     def test_vertexes2(self):
         assert self.f.add(R2Point(0.1, 0.1)).points.size() == 3
+
     #   добавление другой точки может изменить их количество
 
     def test_vertexes3(self):
         assert self.f.add(R2Point(1.0, 1.0)).points.size() == 4
+
     #   изменения выпуклой оболочки могут и уменьшать их количество
 
     def test_vertexes4(self):
@@ -170,18 +171,19 @@ class TestPolygon:
             R2Point(
                 1.0,
                 0.4)).add(
-                    R2Point(
-                        0.8,
-                        0.9)).add(
-                            R2Point(
-                                0.9,
-                                0.8)).points.size() == 7
+            R2Point(
+                0.8,
+                0.9)).add(
+            R2Point(
+                0.9,
+                0.8)).points.size() == 7
         assert self.f.add(R2Point(2.0, 2.0)).points.size() == 4
 
     # Изменение периметра многоугольника
     #   изначально он равен сумме длин сторон
     def test_perimeter1(self):
         assert self.f.perimeter() == approx(2.0 + sqrt(2.0))
+
     #   добавление точки может его изменить
 
     def test_perimeter2(self):
@@ -191,6 +193,7 @@ class TestPolygon:
     #   изначально она равна (неориентированной) площади треугольника
     def test_аrea1(self):
         assert self.f.area() == approx(0.5)
+
     #   добавление точки может увеличить площадь
 
     def test_area2(self):
@@ -252,9 +255,6 @@ class TestPolygon:
         t = t.add(R2Point(3.0, -1.0))
         t = t.add(R2Point(-1.0, 3.0))
         assert t.g() == approx(sqrt(2.0) + 2 * sqrt(10.0))
-
-
-
 
     # 0.а Функция `g73` вычисляется корректно для нулевой площади точки
     # (-1,-1,)
@@ -391,4 +391,3 @@ class TestPolygon:
         t = t.add(R2Point(2.0, 2.0))
         # Общая площадь должна быть 2 (половина квадрата)
         assert t.g73() == approx(2.0)
-

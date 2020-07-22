@@ -28,6 +28,11 @@ class Figure:
 class Void(Figure):
     """ "Hульугольник" """
 
+    def __init__(self, a=None, b=None):
+        # Если вызов из run_convex, то там пользователь может задать вершины
+        # прямоугольника и их надо будет поменять со значений по умолчанию на новые
+        self.rectangle.set_verts(a, b)
+
     def add(self, p):
         return Point(p)
 
@@ -89,7 +94,7 @@ class Polygon(Figure):
         self._perimeter = a.dist(b) + b.dist(c) + c.dist(a)
         self._area = abs(R2Point.area(a, b, c))
         self._g = a.dist(self.fixed_point) + b.dist(self.fixed_point) + \
-            c.dist(self.fixed_point)
+                  c.dist(self.fixed_point)
 
         self.rectangle.add_crossing(b, c)  # Проверяем, пересекает ли отрезок какую-либо из граней
         self.rectangle.add_crossing(b, a)  # Проверяем, пересекает ли отрезок какую-либо из граней
@@ -105,7 +110,7 @@ class Polygon(Figure):
 
     def g(self):
         return self._g
-    
+
     def g73(self):
         """
         Возвращаем общую площадь прямоугольника и выпуклой оболочки
@@ -154,7 +159,7 @@ class Polygon(Figure):
 
             # добавление двух новых рёбер
             self._perimeter += t.dist(self.points.first()) + \
-                t.dist(self.points.last())
+                               t.dist(self.points.last())
             self.points.push_first(t)
             self._g += t.dist(self.fixed_point)
 
@@ -165,8 +170,6 @@ class Polygon(Figure):
             self.rectangle.add_inside(self.points.first(), self.points.last(), t)
 
         return self
-
-
 
 
 if __name__ == "__main__":

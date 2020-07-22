@@ -1,5 +1,7 @@
-from pytest import approx
 from math import sqrt
+
+from pytest import approx
+
 from r2point import R2Point
 
 

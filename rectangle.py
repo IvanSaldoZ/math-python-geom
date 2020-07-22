@@ -1,5 +1,6 @@
-from r2point import R2Point
 from deq import Deq
+from r2point import R2Point
+
 
 class Rectangle:
     """
@@ -7,13 +8,20 @@ class Rectangle:
     """
 
     # Вершины прямоугольника внутри которого ищется общая площадь с выпуклой оболочкой
-    # Задаем по умолчанию хоть какое-то значение
+    # Задаем по умолчанию хоть какое-то значение (квадарт, площадью 4.0)
     verts = [R2Point(-1.0, -1.0), R2Point(1.0, -1.0), R2Point(1.0, 1.0), R2Point(-1.0, 1.0)]
 
     def __init__(self, a=None, b=None):
         self.common_points = Deq()  # Общие точки прямоугольника и выпуклой оболочки (Дек)
         self._common_perimeter = 0  # Общий периметр (так уж за одно посчитаем)
         self._common_area = 0  # Общая площадь - то, что нужно найти в задаче!
+        # Указываем вершины прямоугольника
+        self.set_verts(a, b)
+
+    def set_verts(self, a, b):
+        """
+        Назначаем противоположные вершины прямоугольника
+        """
         # Если в конструкторе указаны противоположные точки, то размеры прямоугольника меняем:
         if a is not None:
             self.verts[0] = a
@@ -21,10 +29,11 @@ class Rectangle:
             self.verts[2] = b
         # Вычисляем противоположные вершины
         self.calc_other_vertex()
+        return self.verts
 
     def calc_other_vertex(self):
         """
-        Считаем противоположные вершины прямоугольника
+        Считаем противоположные вершины прямоугольника, если имеются две других противоположных
         """
         self.verts[1].x = self.verts[2].x
         self.verts[1].y = self.verts[0].y
@@ -72,13 +81,13 @@ class Rectangle:
         # Оставляем только уникальные точки
         # crossing_points = self.uniq(crossing_points)
         for point in crossing_points:
-            print('Checking point:',point)
-            #print(self.add_common_point(point))
+            # print('Checking point:', point)
+            # print(self.add_common_point(point))
             self.add_common_point(point)
-        print('Rect Deque:',self.common_points.size())
-        print('Common area:',self.common_area())
+        #print('Rect Deque:', self.common_points.size())
+        #print('Common area:', self.common_area())
 
-    def add_inside(self, a,b,c):
+    def add_inside(self, a, b, c):
         """
         Проверяем вершины прямоугольника, которые попали внутрь выпуклой оболочки и добавляем их в общие точки
         Этот метод нужен тогда, когда общих пересечений у выпуклой оболочки нет, но сами вершины прямоугольника
@@ -86,10 +95,10 @@ class Rectangle:
         Передаются три новых точки выпуклой оболочки, которые дают нам новую площадь
         """
         for i in range(4):
-            if self.verts[i].is_inside_of_triang(a,b,c):
+            if self.verts[i].is_inside_of_triang(a, b, c):
                 self.add_common_point(self.verts[i])
-                print('Rect Deque (inner point):', self.common_points.size())
-                print('Common area (inner point):', self.common_area())
+                #print('Rect Deque (inner point):', self.common_points.size())
+                #print('Common area (inner point):', self.common_area())
 
     def add_outside(self, a):
         """
@@ -101,8 +110,8 @@ class Rectangle:
         # аргументы - противопоолжные вершины этого прямоугольника
         if a.is_inside(self.verts[0], self.verts[2]):
             self.add_common_point(a)
-            print('Rect Deque (outer point):', self.common_points.size())
-            print('Common area (outer point):', self.common_area())
+            #print('Rect Deque (outer point):', self.common_points.size())
+            #print('Common area (outer point):', self.common_area())
 
     # Оставляем только уникальные значения в списк
     def uniq(self, lst):
@@ -140,8 +149,8 @@ class Rectangle:
                 # учёт удаления ребра, соединяющего конец и начало дека
                 self._common_perimeter -= self.common_points.first().dist(self.common_points.last())
                 self._common_area += abs(R2Point.area(t,
-                                               self.common_points.last(),
-                                               self.common_points.first()))
+                                                      self.common_points.last(),
+                                                      self.common_points.first()))
 
                 # удаление освещённых рёбер из начала дека
                 p = self.common_points.pop_first()
@@ -160,8 +169,8 @@ class Rectangle:
                 self.common_points.push_last(p)
 
                 # добавление двух новых рёбер
-                self._common_perimeter +=  t.dist(self.common_points.first()) + \
-                                        t.dist(self.common_points.last())
+                self._common_perimeter += t.dist(self.common_points.first()) + \
+                                          t.dist(self.common_points.last())
                 self.common_points.push_first(t)
-        #print('Common Points:', self.common_points)
+        # print('Common Points:', self.common_points)
         return self

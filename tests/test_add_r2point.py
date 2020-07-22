@@ -1,5 +1,7 @@
-from pytest import approx
 from math import sqrt
+
+from pytest import approx
+
 from r2point import R2Point
 
 
@@ -29,7 +31,7 @@ class TestAddR2Point:
 
     def test_dist2line5(self):
         a, b, c = 1.0, 1.0, -1.0
-        assert R2Point(0.0, 0.0).dist2line(a, b, c) == approx(sqrt(2.0)/2.0)
+        assert R2Point(0.0, 0.0).dist2line(a, b, c) == approx(sqrt(2.0) / 2.0)
 
     def test_dist2line6(self):
         a, b, c = 1.0, 1.0, -1.0
@@ -91,7 +93,7 @@ class TestAddR2Point:
     def test_dist2segment08(self):
         a = R2Point(0.0, 0.0)
         p, q = R2Point(1.0, 0.0), R2Point(0.0, 1.0)
-        assert a.dist2segment(p, q) == approx(sqrt(2.0)/2.0)
+        assert a.dist2segment(p, q) == approx(sqrt(2.0) / 2.0)
 
     # Точка все полосы
     def test_dist2segment09(self):
@@ -307,13 +309,13 @@ class TestAddR2Point:
     def test_dist_seg2line8(self):
         a, b, c = 1.0, 1.0, -1.0
         p, q = R2Point(0.0, 0.0), R2Point(-1.0, 0.0)
-        assert R2Point.dist_seg2line(p, q, a, b, c) == approx(sqrt(2.0)/2.0)
+        assert R2Point.dist_seg2line(p, q, a, b, c) == approx(sqrt(2.0) / 2.0)
 
     # Вырожденный отрезок (точка) не лежит на прямой
     def test_dist_seg2line9(self):
         a, b, c = 1.0, 1.0, -1.0
         p, q = R2Point(0.0, 0.0), R2Point(0.0, 0.0)
-        assert R2Point.dist_seg2line(p, q, a, b, c) == approx(sqrt(2.0)/2.0)
+        assert R2Point.dist_seg2line(p, q, a, b, c) == approx(sqrt(2.0) / 2.0)
 
     # Вырожденный отрезок (точка) лежит на прямой
     def test_dist_seg2line10(self):
@@ -423,7 +425,7 @@ class TestAddR2Point:
         q = R2Point(0.0, 1.0)
         r = R2Point(-1.0, -1.0)
         s = R2Point(1.0, 1.0)
-        assert R2Point.dist_seg2seg(p, q, r, s) == approx(sqrt(2.0)/2.0)
+        assert R2Point.dist_seg2seg(p, q, r, s) == approx(sqrt(2.0) / 2.0)
 
     # Отрезки не вырождены и не лежат на одной прямой
     # при этом они параллельны; расстояние — не длина перпендикуляра
@@ -782,7 +784,7 @@ class TestAddR2Point:
         s = R2Point(1.0, 1.0)
         res = R2Point.seg2seg(p, q, r, s)
         assert (res[0].approx(p) and res[1].approx(s)) or \
-            (res[0].approx(s) and res[1].approx(p))
+               (res[0].approx(s) and res[1].approx(p))
 
     # Отрезки не вырождены; лежат на одной прямой и перекрываются
     def test_seg2seg17(self):
@@ -792,7 +794,7 @@ class TestAddR2Point:
         s = R2Point(1.0, 1.0)
         res = R2Point.seg2seg(r, s, p, q)
         assert (res[0].approx(p) and res[1].approx(s)) or \
-            (res[0].approx(s) and res[1].approx(p))
+               (res[0].approx(s) and res[1].approx(p))
 
     # Отрезки не вырождены; лежат на одной прямой и один внутри другого
     def test_seg2seg18(self):
@@ -802,7 +804,7 @@ class TestAddR2Point:
         s = R2Point(1.0, 1.0)
         res = R2Point.seg2seg(p, q, r, s)
         assert (res[0] == r and res[1] == s) or \
-            (res[0] == s and res[1] == r)
+               (res[0] == s and res[1] == r)
 
     # Отрезки не вырождены; лежат на одной прямой и один внутри другого
     def test_seg2seg19(self):
@@ -812,7 +814,7 @@ class TestAddR2Point:
         s = R2Point(1.0, 1.0)
         res = R2Point.seg2seg(r, s, p, q)
         assert (res[0] == r and res[1] == s) or \
-            (res[0] == s and res[1] == r)
+               (res[0] == s and res[1] == r)
 
     # Отрезки не вырождены; лежат на одной прямой и не пересекаются
     def test_seg2seg20(self):
@@ -1026,7 +1028,7 @@ class TestAddR2Point:
         c = R2Point(0.0, 1.0)
         res = R2Point.seg_in_triangle(p, q, a, b, c)
         assert res[0].approx(p) and res[1].approx(q) or \
-            res[0].approx(q) and res[1].approx(p)
+               res[0].approx(q) and res[1].approx(p)
 
     # Отрезок вырожден и (точка) лежит на одной из сторон треугольника
     def test_seg_in_triangle03(self):
@@ -1047,7 +1049,7 @@ class TestAddR2Point:
         c = R2Point(0.0, 1.0)
         res = R2Point.seg_in_triangle(p, q, a, b, c)
         assert res[0].approx(p) and res[1].approx(q) or \
-            res[0].approx(q) and res[1].approx(p)
+               res[0].approx(q) and res[1].approx(p)
 
     # Отрезок невырожден и чaстично лежит на одной из сторон треугольника
     def test_seg_in_triangle05(self):
@@ -1058,7 +1060,7 @@ class TestAddR2Point:
         c = R2Point(0.0, 1.0)
         res = R2Point.seg_in_triangle(p, q, a, b, c)
         assert res[0].approx(p) and res[1].approx(b) or \
-            res[0].approx(b) and res[1].approx(p)
+               res[0].approx(b) and res[1].approx(p)
 
     # Отрезок невырожден и «касается» треугольника
     def test_seg_in_triangle06(self):
@@ -1080,7 +1082,7 @@ class TestAddR2Point:
         c = R2Point(0.0, 1.0)
         res = R2Point.seg_in_triangle(p, q, a, b, c)
         assert res[0].approx(p) and res[1].approx(R2Point(0.5, 0.5)) or \
-            res[0].approx(R2Point(0.5, 0.5)) and res[1].approx(p)
+               res[0].approx(R2Point(0.5, 0.5)) and res[1].approx(p)
 
     # Отрезок невырожден; один из концов внутри треугольника;
     # отрезок проходит через вершину треугольника
@@ -1093,7 +1095,7 @@ class TestAddR2Point:
         res = R2Point.seg_in_triangle(p, q, a, b, c)
         print(res[0].__dict__, res[1].__dict__)
         assert res[0].approx(p) and res[1].approx(a) or \
-            res[0].approx(a) and res[1].approx(p)
+               res[0].approx(a) and res[1].approx(p)
 
     # Отрезок невырожден; оба конца расположены вне треугольника;
     # отрезок пересекает две стороны треугольника
@@ -1103,11 +1105,11 @@ class TestAddR2Point:
         a = R2Point(-1.0, -1.0)
         b = R2Point(1.0, 0.0)
         c = R2Point(0.0, 1.0)
-        d = R2Point(1.0/3.0, -1.0/3.0)
-        e = R2Point(-1.0/3.0, 1.0/3.0)
+        d = R2Point(1.0 / 3.0, -1.0 / 3.0)
+        e = R2Point(-1.0 / 3.0, 1.0 / 3.0)
         res = R2Point.seg_in_triangle(p, q, a, b, c)
         assert res[0].approx(d) and res[1].approx(e) or \
-            res[0].approx(e) and res[1].approx(d)
+               res[0].approx(e) and res[1].approx(d)
 
     # Отрезок невырожден; оба конца расположены вне треугольника;
     # отрезок проходит через одну из вершин треугольника
@@ -1132,7 +1134,7 @@ class TestAddR2Point:
         d = R2Point(0.5, 0.5)
         res = R2Point.seg_in_triangle(p, q, a, b, c)
         assert res[0].approx(a) and res[1].approx(d) or \
-            res[0].approx(d) and res[1].approx(a)
+               res[0].approx(d) and res[1].approx(a)
 
     # Отрезок вырожден и (точка) находится вне треугольника
     def test_seg_in_triangle12(self):
