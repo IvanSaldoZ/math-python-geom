@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Е.А. Роганов" />
+  <title>Модификация проекта «Выпуклая оболочка»</title>
+  <link rel="stylesheet" href="https://edu-support.mephi.ru/Stylesheets/Highlighting.css">
+  <link rel="stylesheet" href="https://edu-support.mephi.ru/Stylesheets/markdown.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Модификация проекта «Выпуклая оболочка»</h1>
+<p class="author">Е.А. Роганов</p>
+<p class="date">v.1, 1 ноября 2019 года</p>
+</header>
+<h3 id="постановка-задачи">Постановка задачи</h3>
+<p>Необходимо модифицировать код эталонного проекта таким образом, чтобы программа индуктивно вычисляла сумму расстояний от заданной точки до вершин выпуклой оболочки.</p>
+<h3 id="обсуждение-идеи-решения">Обсуждение идеи решения</h3>
+<p>Метод <code>g</code> (так мы назовём метод, который будет возвращать требуемую сумму расстояний) должен возвращать <code>None</code> для нульугольника, так как в этом случае отсутствуют вершины выпуклой оболочки. Для одноугольника и двуугольника <code>g</code> легко находится, а для многоугольника вычисление легко реализовать, вычитая из суммы расстояний <code>_g</code> расстояния до удаляемых вершин и добавляя расстояние до включаемой вершины при изменении выпуклой оболочки.</p>
+<p>В классе <code>Figure</code> целесообразно определить переменную (атрибут) класса <code>fixed_point</code> — это будет та самая точка, сумма расстояний от которой до вершин выпуклой оболочке будет находиться. Python позволяет не делать этого при определении класса, поэтому можно задание её координат выполнять в файлах запуска и тестах.</p>
+<p>Определение в классе <code>Figure</code> метода <code>g</code>, возвращающего <code>None</code>, позволяет не переопределять этот метод в классе <code>Void</code>. Для классов <code>Point</code> и <code>Segment</code> метод <code>g</code> легко определяется, а в код класса <code>Polygon</code> необходимо внести определённые изменения.</p>
+<p>В тесты необходимо добавить несколько методов, которые будут иллюстрировать правильность выполненной модификации. Можно, например, рассмотреть одноугольник и двуугольник, для которых значение функции <code>g</code> легко находится устно. Затем надо добавлять такие точки к двуугольнику, чтобы:</p>
+<ul>
+<li>новые рёбра добавлялись;</li>
+<li>новые рёбра удалялись;</li>
+<li>для всех получаемых выпуклых оболочек значение функции <code>g</code> легко вычислялось.</li>
+</ul>
+<p>Скопируем директорию <code>convex</code> с файлами эталонного проекта в директорию <code>m2_convex</code>, в которой будет выполняться работа по модификации проекта.</p>
+<h3 id="первый-этап-работа-с-одноугольником-и-двуугольником">Первый этап — работа с одноугольником и двуугольником</h3>
+<p>Целесообразно начать с изменения тестов — это позволит затем проверить (хотя бы до некоторой степени) корректность модификации кода этих двух классов.</p>
+<h4 id="модификация-тестов">Модификация тестов</h4>
+<p>В методы <code>setup_method</code> необходимо добавить инициализацию точки <code>fixed_point</code>, от которой вычисляется сумма расстояний до вершин выпуклой оболочки:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode py"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1">    <span class="kw">def</span> setup_method(<span class="va">self</span>):</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">        Figure.fixed_point <span class="op">=</span> R2Point(<span class="fl">1.0</span>, <span class="fl">0.0</span>)</a></code></pre></div>
+<p>Для разных классов координаты этой точки можно указывать различными.</p>
+<h4 id="модификация-кода">Модификация кода</h4>
+<p>В класс <code>Figure</code> (файл <code>convex.py</code>) добавим метод <code>g</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode py"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1">    <span class="kw">def</span> g(<span class="va">self</span>):</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">        <span class="cf">return</span> <span class="va">None</span></a></code></pre></div>
+<p>В классaх <code>Point</code> и <code>Segment</code> этот метод надо переопределить.</p>
+<h4 id="запуск-тестов">Запуск тестов</h4>
+<p>Убеждаемся в правильности выполненной модификации, выполняя команду</p>
+<pre><code>python -B -m pytest -p no:cacheprovider tests/test_convex.py </code></pre>
+<h3 id="второй-этап-работа-с-многоугольником">Второй этап — работа с многоугольником</h3>
+<h4 id="модификация-тестов-1">Модификация тестов</h4>
+<p>Идея модификации была описана выше. С кодом методов, добавленных в класс <code>TestPolygon</code>, можно ознакомиться в файле <code>test_convex.py</code>.</p>
+<blockquote>
+<p>Рекомендуется нарисовать (на бумаге) картинку. Она поможет понять тесты.</p>
+</blockquote>
+<h4 id="модификация-кода-1">Модификация кода</h4>
+<p>Результат — в файле <code>convex.py</code>.</p>
+<h3 id="третий-этап-модификация-файлов-запуска">Третий этап — модификация файлов запуска</h3>
+<p>В файлах <code>run_convex.py</code> и <code>run_tk_convex.py</code> кроме добавления печати значений вычисляемого метода <code>g</code> необходимо обеспечить ввод координат точки, от которой будет вычисляться сумма расстояний до вершин выпуклой оболочки.</p>
+<h3 id="четвёртый-этап-проверка-соблюдения-соглашений-о-стиле-программного-кода">Четвёртый этап — проверка соблюдения соглашений о стиле программного кода</h3>
+<p>Эту команду следует выполнить, находясь в директории <code>m1_convex</code>.</p>
+<pre><code>find . -name &#39;*.py&#39; -exec pycodestyle {} \;</code></pre>
+<h3 id="что-же-было-сделано">Что же было сделано?</h3>
+<p>Полный перечень внесённых в эталонную версию проекта изменений, можно получить с помощью команды <code>diff</code> с опцией <code>-r</code>, выполнять которую следует находясь в родительской по отношению к <code>convex</code> и <code>m2_convex</code> директориям):</p>
+<pre><code>diff -r m2_convex convex</code></pre>
+<p>Вот результат:</p>
+<pre><code>diff -r m2_convex/convex.py convex/convex.py
+14,16d13
+&lt;     def g(self):
+&lt;         return None
+&lt; 
+34,36d30
+&lt;     def g(self):
+&lt;         return self.p.dist(self.fixed_point)
+&lt; 
+57,59d50
+&lt;     def g(self):
+&lt;         return self.fixed_point.dist(self.p) + self.fixed_point.dist(self.q)
+&lt; 
+75,76d65
+&lt;         self._g = a.dist(self.fixed_point) + b.dist(self.fixed_point) + \
+&lt;             c.dist(self.fixed_point)
+84,86d72
+&lt;     def g(self):
+&lt;         return self._g
+&lt; 
+110d95
+&lt;                 self._g -= p.dist(self.fixed_point)
+119d103
+&lt;                 self._g -= p.dist(self.fixed_point)
+127d110
+&lt;             self._g += t.dist(self.fixed_point)
+diff -r m2_convex/run_convex.py convex/run_convex.py
+3,7c3
+&lt; from convex import Figure, Void
+&lt; 
+&lt; print(&quot;Заданная точка&quot;)
+&lt; Figure.fixed_point = R2Point()
+&lt; print(&quot;\nТочки плоскости&quot;)
+---
+&gt; from convex import Void
+13c9
+&lt;         print(f&quot;S = {f.area()}, P = {f.perimeter()}, g = {f.g()}&quot;)
+---
+&gt;         print(f&quot;S = {f.area()}, P = {f.perimeter()}&quot;)
+diff -r m2_convex/run_tk_convex.py convex/run_tk_convex.py
+4,8c4
+&lt; from convex import Figure, Void, Point, Segment, Polygon
+&lt; 
+&lt; print(&quot;Заданная точка&quot;)
+&lt; Figure.fixed_point = R2Point()
+&lt; print(&quot;\nТочки плоскости&quot;)
+---
+&gt; from convex import Void, Point, Segment, Polygon
+26c22
+&lt;         print(f&quot;S = {f.area()}, P = {f.perimeter()}, g = {f.g()}&quot;)
+---
+&gt;         print(f&quot;S = {f.area()}, P = {f.perimeter()}&quot;)
+Только в m2_convex: solution.html
+Только в m2_convex: solution.md
+diff -r m2_convex/tests/test_convex.py convex/tests/test_convex.py
+39d38
+&lt;         Figure.fixed_point = R2Point(1.0, 0.0)
+65,68d63
+&lt;     # Функция `g` вычисляется корректно
+&lt;     def test_g(self):
+&lt;         assert self.f.g() == approx(1.0)
+&lt; 
+75d69
+&lt;         Figure.fixed_point = R2Point(0.5, 0.0)
+105,108d98
+&lt;     # Функция `g` вычисляется корректно
+&lt;     def test_g(self):
+&lt;         assert self.f.g() == approx(1.0)
+&lt; 
+119d108
+&lt;         Figure.fixed_point = R2Point(0.0, 0.0)
+176,232d164
+&lt; 
+&lt;     # Функция `g` вычисляется корректно для треугольника
+&lt;     def test_g1(self):
+&lt;         t = Segment(R2Point(-1.0, 0.0), R2Point(1.0, 0.0))
+&lt;         t = t.add(R2Point(0.0, 1.0))
+&lt;         assert t.g() == approx(3.0)
+&lt; 
+&lt;     # Функция `g` вычисляется корректно для квадрата
+&lt;     def test_g2(self):
+&lt;         t = Segment(R2Point(-1.0, 0.0), R2Point(1.0, 0.0))
+&lt;         t = t.add(R2Point(0.0, 1.0))
+&lt;         t = t.add(R2Point(0.0, -1.0))
+&lt;         assert t.g() == approx(4.0)
+&lt; 
+&lt;     # Функция `g` вычисляется корректно для трапеции
+&lt;     def test_g3(self):
+&lt;         t = Segment(R2Point(-1.0, 0.0), R2Point(1.0, 0.0))
+&lt;         t = t.add(R2Point(0.0, 1.0))
+&lt;         t = t.add(R2Point(0.0, -1.0))
+&lt;         t = t.add(R2Point(1.0, 1.0))
+&lt;         assert t.g() == approx(4.0 + sqrt(2.0))
+&lt; 
+&lt;     # Функция `g` вычисляется корректно для прямоугольника
+&lt;     def test_g4(self):
+&lt;         t = Segment(R2Point(-1.0, 0.0), R2Point(1.0, 0.0))
+&lt;         t = t.add(R2Point(0.0, 1.0))
+&lt;         t = t.add(R2Point(0.0, -1.0))
+&lt;         t = t.add(R2Point(1.0, 1.0))
+&lt;         t = t.add(R2Point(1.0, -1.0))
+&lt;         t = t.add(R2Point(-1.0, 1.0))
+&lt;         t = t.add(R2Point(-1.0, -1.0))
+&lt;         assert t.g() == approx(4.0 * sqrt(2.0))
+&lt; 
+&lt;     # Функция `g` вычисляется корректно для большой трапеции
+&lt;     def test_g5(self):
+&lt;         t = Segment(R2Point(-1.0, 0.0), R2Point(1.0, 0.0))
+&lt;         t = t.add(R2Point(0.0, 1.0))
+&lt;         t = t.add(R2Point(0.0, -1.0))
+&lt;         t = t.add(R2Point(1.0, 1.0))
+&lt;         t = t.add(R2Point(1.0, -1.0))
+&lt;         t = t.add(R2Point(-1.0, 1.0))
+&lt;         t = t.add(R2Point(-1.0, -1.0))
+&lt;         t = t.add(R2Point(3.0, -1.0))
+&lt;         assert t.g() == approx(3.0 * sqrt(2.0) + sqrt(10.0))
+&lt; 
+&lt;     # Функция `g` вычисляется корректно для большого треугольника
+&lt;     def test_g6(self):
+&lt;         t = Segment(R2Point(-1.0, 0.0), R2Point(1.0, 0.0))
+&lt;         t = t.add(R2Point(0.0, 1.0))
+&lt;         t = t.add(R2Point(0.0, -1.0))
+&lt;         t = t.add(R2Point(1.0, 1.0))
+&lt;         t = t.add(R2Point(1.0, -1.0))
+&lt;         t = t.add(R2Point(-1.0, 1.0))
+&lt;         t = t.add(R2Point(-1.0, -1.0))
+&lt;         t = t.add(R2Point(3.0, -1.0))
+&lt;         t = t.add(R2Point(-1.0, 3.0))
+&lt;         assert t.g() == approx(sqrt(2.0) + 2 * sqrt(10.0))</code></pre>
+</body>
+</html>
