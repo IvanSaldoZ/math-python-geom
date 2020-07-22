@@ -22,7 +22,7 @@ class Figure:
         """
         По умолчанию площадь пересечения равна нулю
         """
-        return 0
+        return 0.0
 
 
 class Void(Figure):
@@ -72,12 +72,6 @@ class Segment(Figure):
 
     def g(self):
         return self.fixed_point.dist(self.p) + self.fixed_point.dist(self.q)
-
-    def g73(self):
-        """
-        Возвращаем общую площадь прямоугольника и выпуклой оболочки
-        """
-        return self.rectangle.common_area()
 
 
 class Polygon(Figure):

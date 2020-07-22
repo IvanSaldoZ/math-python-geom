@@ -10,6 +10,7 @@ class TestVoid:
     # Инициализация (выполняется для каждого из тестов класса)
     def setup_method(self):
         self.f = Void()
+        self.f.rectangle = Rectangle()
 
     # Нульугольник является фигурой
     def test_figure(self):
@@ -32,7 +33,7 @@ class TestVoid:
         assert isinstance(self.f.add(R2Point(0.0, 0.0)), Point)
 
     # Площадь пересечения - нулевая
-    def test_g73_area(self):
+    def test_g73_area_segment(self):
         assert self.f.g73() == 0.0
 
 
@@ -73,7 +74,7 @@ class TestPoint:
         assert self.f.g() == approx(1.0)
 
     # Площадь пересечения - нулевая
-    def test_g73_area(self):
+    def test_g73_area_point(self):
         assert self.f.g73() == 0.0
 
 
@@ -370,7 +371,8 @@ class TestPolygon:
     def test_g73_not_crossing(self):
         Figure.rectangle = Rectangle()  # Сразу создаем прямоугольник
         # Сначала делаем отрезок
-        t = Segment(R2Point(-1.0, 2.0), R2Point(1.0, 2.0))
+        t = Point(R2Point(-1.0, 2.0))
+        t = t.add(R2Point(1.0, 2.0))
         # Соединяем с третьей точкой -> Получаем треугольник
         t = t.add(R2Point(1.0, 3.0))
         # Соединяем с четвертой точкой -> Получаем полосочку ВЫШЕ нашего квадрата и не пересекающего его
@@ -383,9 +385,10 @@ class TestPolygon:
     def test_g73_trian_big_upper(self):
         Figure.rectangle = Rectangle()  # Сразу создаем прямоугольник
         # Сначала делаем отрезок
-        t = Segment(R2Point(-2.0, 2.0), R2Point(2.0, 2.0))
+        t = Point(R2Point(-2.0, 2.0))
+        t = t.add(R2Point(-2.0, -2.0))
         # Соединяем с третьей точкой -> Получаем большой треугольник
-        t = t.add(R2Point(1.0, 3.0))
+        t = t.add(R2Point(2.0, 2.0))
         # Общая площадь должна быть 2 (половина квадрата)
         assert t.g73() == approx(2.0)
 
