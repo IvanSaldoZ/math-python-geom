@@ -134,8 +134,11 @@ class Polygon(Figure):
             self._area += abs(R2Point.area(t,
                                            self.points.last(),
                                            self.points.first()))
-            self.rectangle.add_crossing(self.points.first(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
-            self.rectangle.add_crossing(self.points.last(), t)  # Проверяем, пересекает ли отрезок какую-либо из граней
+            #print('OK11', t)
+            #print('OK12', self.points.first())
+            #print('OK13', self.points.last())
+            self.rectangle.add_crossing(t, self.points.first())  # Проверяем, пересекает ли отрезок какую-либо из граней
+            self.rectangle.add_crossing(t, self.points.last())  # Проверяем, пересекает ли отрезок какую-либо из граней
             # Добавляем в Дек вершины прямоугольника, которые находятся внутри выпуклой оболочки,
             # чтобы корректно считать площадь, если НЕТ пересечения
             self.rectangle.add_inside(self.points.first(), self.points.last(), t)

@@ -87,8 +87,8 @@ class Rectangle:
             #print('Checking point:', point)
             #print(self.add_common_point(point))
             self.add_common_point(point)
-            #print('Rect Deque:', self.common_points.size())
-            #print('Common area:', self.common_area())
+            #print('Rect Deque (crossing point):', self.common_points.size())
+            #print('Common area (crossing point):', self.common_area())
 
     def add_inside(self, a, b, c):
         """
@@ -133,9 +133,25 @@ class Rectangle:
         if t in self.common_points:
             return self
         # Поначалу просто наберем хотя бы одну точку
-        if self.common_points.size() <= 1:
+        if self.common_points.size() == 0:
             self.common_points.push_first(t)
-        else:
+        # Потом добавляем в конец другую точку
+        if self.common_points.size() == 1:
+            self.common_points.push_last(t)
+        # Если у нас есть две точки, то добавляя третью нам надо расширить отрезок, удалив серединную точку
+        if self.common_points.size() == 2:
+            # Если точки лежат на одной прямой
+            if not R2Point.is_triangle(t, self.common_points.first(), self.common_points.last()):
+                # Проверяем, находится ли точка начала дека внутри отрезка
+                if self.common_points.first().is_inside(t, self.common_points.last()):
+                    self.common_points.pop_first()
+                    self.common_points.push_last(t)  # Если да, то заменяем на добавляемую точку
+                # или если точка конца дека находится внутри отрезка
+                elif self.common_points.last().is_inside(t, self.common_points.first()):
+                    self.common_points.pop_last()
+                    self.common_points.push_first(t)
+        # Если же у нас уже накопилось более трех точек, то ищем площадь
+        if self.common_points.size() >= 2:
             # поиск освещённого ребра
             for n in range(self.common_points.size()):
                 if t.is_light(self.common_points.last(), self.common_points.first()):
@@ -144,19 +160,27 @@ class Rectangle:
 
             # хотя бы одно освещённое ребро есть (если не внутри)
             if t.is_light(self.common_points.last(), self.common_points.first()):
-
                 # учёт удаления ребра, соединяющего конец и начало дека
                 self._common_perimeter -= self.common_points.first().dist(self.common_points.last())
-                self._common_area += abs(R2Point.area(t,
+                area = abs(R2Point.area(t,
                                                       self.common_points.last(),
                                                       self.common_points.first()))
-
+                self._common_area += area
                 # удаление освещённых рёбер из начала дека
+                #print('OK1:',self.common_points)
+                #print('OK1_first:',self.common_points.first())
+                #print('OK1_last:',self.common_points.last())
+                #print('OK1_size:',self.common_points.size())
                 p = self.common_points.pop_first()
+                #print('OK2:',self.common_points)
+                #print('OK3:',p)
+                #print('OK4:',self.common_points.array[0])
                 while t.is_light(p, self.common_points.first()):
                     self._common_perimeter -= p.dist(self.common_points.first())
                     self._common_area += abs(R2Point.area(t, p, self.common_points.first()))
                     p = self.common_points.pop_first()
+                    #print('OK5_p:', p)
+                    #print('OK5_after_p:', self.common_points)
                 self.common_points.push_first(p)
 
                 # удаление освещённых рёбер из конца дека

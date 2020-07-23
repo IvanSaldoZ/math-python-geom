@@ -32,11 +32,11 @@ setattr(Polygon, 'draw', polygon_draw)
 
 
 print("Задание #73 (Сальдиков): Вершина #1 правильного прямоугольника")
-#vertex1 = R2Point(-1.0, -1.0)
+#vertex1 = R2Point(0.0, 0.0)
 vertex1 = R2Point()
 
 print("Задание #73 (Сальдиков): Вершина #2 (противоположная) правильного прямоугольника")
-#vertex2 = R2Point(1.0, 1.0)
+#vertex2 = R2Point(2.0, 1.0)
 vertex2 = R2Point()
 
 
@@ -60,10 +60,12 @@ try:
     # f = add_pt_and_draw(f, tk, 4.0, 0.0)
     # f = add_pt_and_draw(f, tk, 0.0, -4.0)
 
-    # f = add_pt_and_draw(f, tk, -1.0, -1.0)
     # f = add_pt_and_draw(f, tk, 1.0, 1.0)
-    # f = add_pt_and_draw(f, tk, -1.0, 1.0)
-    #    f = add_pt_and_draw(f, tk, 0.0, -4.0)
+    # f = add_pt_and_draw(f, tk, 2.0, 2.0)
+    # f = add_pt_and_draw(f, tk, 0.0, 2.0)
+    # f = add_pt_and_draw(f, tk, 2.0, 1.0)
+    # f = add_pt_and_draw(f, tk, 0.0, 2.0)
+    #f = add_pt_and_draw(f, tk, 0.0, 1.0)
 
     while True:
         f = add_pt_and_draw(f, tk)
