@@ -279,7 +279,7 @@ class R2Point:
         """
         Находится ли точка self внутри треугольника a,b,c (вычисляем через ориентацию)
         """
-        return self.orient(a, b) == self.orient(b, c) == self.orient(c, a)
+        return self.orient(a, b) == self.orient(b, c) == self.orient(c, a) != 0
 
 
 if __name__ == "__main__":

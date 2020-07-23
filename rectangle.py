@@ -69,20 +69,24 @@ class Rectangle:
         if crossing_points_bottom is not None:
             crossing_points.append(crossing_points_bottom[0])
             crossing_points.append(crossing_points_bottom[1])
+            #print("AddOK1")
         if crossing_points_right is not None:
             crossing_points.append(crossing_points_right[0])
             crossing_points.append(crossing_points_right[1])
+            #print("AddOK2")
         if crossing_points_top is not None:
             crossing_points.append(crossing_points_top[0])
             crossing_points.append(crossing_points_top[1])
+            #print("AddOK3")
         if crossing_points_left is not None:
             crossing_points.append(crossing_points_left[0])
             crossing_points.append(crossing_points_left[1])
+            #print("AddOK4")
         # Оставляем только уникальные точки
         # crossing_points = self.uniq(crossing_points)
         for point in crossing_points:
-            # print('Checking point:', point)
-            # print(self.add_common_point(point))
+            #print('Checking point:', point)
+            #print(self.add_common_point(point))
             self.add_common_point(point)
         #print('Rect Deque:', self.common_points.size())
         #print('Common area:', self.common_area())
@@ -97,6 +101,9 @@ class Rectangle:
         for i in range(4):
             if self.verts[i].is_inside_of_triang(a, b, c):
                 self.add_common_point(self.verts[i])
+                #print('a:',a)
+                #print('b:',b)
+                #print('c:',c)
                 #print('Rect Deque (inner point):', self.common_points.size())
                 #print('Common area (inner point):', self.common_area())
 
@@ -131,6 +138,7 @@ class Rectangle:
     # добавление новой точки в массив точек общей площади
     def add_common_point(self, t):
         # Если такая точка уже есть, то ничего не делаем
+        #print('Common Points Before:', self.common_points)
         if t in self.common_points:
             return self
         # Поначалу просто наберем хотя бы одну точку
@@ -172,5 +180,5 @@ class Rectangle:
                 self._common_perimeter += t.dist(self.common_points.first()) + \
                                           t.dist(self.common_points.last())
                 self.common_points.push_first(t)
-        # print('Common Points:', self.common_points)
+        #print('Common Points After:', self.common_points)
         return self
