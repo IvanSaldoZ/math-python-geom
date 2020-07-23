@@ -145,11 +145,11 @@ class Rectangle:
                 # Проверяем, находится ли точка начала дека внутри отрезка
                 if self.common_points.first().is_inside(t, self.common_points.last()):
                     self.common_points.pop_first()
-                    self.common_points.push_last(t)  # Если да, то заменяем на добавляемую точку
+                    self.common_points.push_first(t)  # Если да, то заменяем на добавляемую точку
                 # или если точка конца дека находится внутри отрезка
                 elif self.common_points.last().is_inside(t, self.common_points.first()):
                     self.common_points.pop_last()
-                    self.common_points.push_first(t)
+                    self.common_points.push_last(t)
         # Если же у нас уже накопилось более трех точек, то ищем площадь
         if self.common_points.size() >= 2:
             # поиск освещённого ребра

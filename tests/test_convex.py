@@ -445,7 +445,7 @@ class TestPolygon:
     # создается через границу прямоугольника
     # (0.0, 0.0), (2.0, 1.0) - прямоугольник
     # (1.0, 0.0), (1.0, 1.0), (3.0, 2.0)
-    def test_g73_rect_x_lay_trian_up4(self):
+    def test_g73_rect_x_lay_trian_trian_throught_border_three(self):
         # Сразу создаем прямоугольник
         Figure.rectangle = Rectangle(R2Point(0.0, 0.0), R2Point(2.0, 1.0))
         t = Point(R2Point(1.0, 0.0))
@@ -460,7 +460,7 @@ class TestPolygon:
     # (продолжение предыдущего теста)
     # (0.0, 0.0), (2.0, 1.0) - прямоугольник
     # (1.0, 0.0), (1.0, 1.0), (3.0, 2.0), (3.0, 0.0)
-    def test_g73_rect_x_lay_trian_up5(self):
+    def test_g73_rect_x_lay_trian_throught_border_four(self):
         # Сразу создаем прямоугольник
         Figure.rectangle = Rectangle(R2Point(0.0, 0.0), R2Point(2.0, 1.0))
         t = Point(R2Point(1.0, 0.0))
@@ -477,7 +477,7 @@ class TestPolygon:
     # Причем новая точка добавляется за отрезком точек, и нужно расширить дек
     # (0.0, 0.0), (2.0, 1.0) - прямоугольник
     # (1.0, 1.0), (2.0, 2.0), (0.0, 2.0), (2.0, 1.0), (0.0, 2.0), (0.0, 1.0)
-    def test_g73_rect_x_lay_trian_up6(self):
+    def test_g73_rect_x_lay_same_line1(self):
         # Сразу создаем прямоугольник
         Figure.rectangle = Rectangle(R2Point(0.0, 0.0), R2Point(2.0, 1.0))
         t = Point(R2Point(1.0, 1.0))
@@ -495,7 +495,7 @@ class TestPolygon:
     # Причем новая точка добавляется за отрезком точек, и нужно расширить дек
     # (0.0, 0.0), (2.0, 1.0) - прямоугольник
     # (1.0, 1.0), (2.0, 2.0), (0.0, 2.0), (2.0, 1.0), (0.0, 2.0), (0.0, 1.0), (0.0, 2.0), (0.0, 1.0)
-    def test_g73_rect_x_lay_trian_up7(self):
+    def test_g73_rect_x_lay_same_line2(self):
         # Сразу создаем прямоугольник
         Figure.rectangle = Rectangle(R2Point(-1.0, 0.0), R2Point(2.0, 1.0))
         t = Point(R2Point(1.0, 1.0))
@@ -515,7 +515,7 @@ class TestPolygon:
     # Причем новая точка добавляется за отрезком точек, и нужно расширить дек
     # (0.0, 0.0), (2.0, 1.0) - прямоугольник
     # (1.0, 1.0), (2.0, 2.0), (0.0, 2.0), (2.0, 1.0), (0.0, 2.0), (0.0, 1.0), (0.0, 2.0), (0.0, 1.0)
-    def test_g73_rect_x_lay_trian_up8(self):
+    def test_g73_rect_x_lay_same_line3(self):
         # Сразу создаем прямоугольник
         Figure.rectangle = Rectangle(R2Point(-1.0, 0.0), R2Point(3.0, 1.0))
         t = Point(R2Point(1.0, 1.0))
