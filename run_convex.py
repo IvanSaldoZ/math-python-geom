@@ -24,9 +24,9 @@ def add_pt(f, x=None, y=None):
 print("\nТочки плоскости")
 f = Void(vertex1, vertex2)
 try:
-    # f = add_pt(f, 0.0, 2.0)
-    # f = add_pt(f, 2.0, 0.0)
-    # f = add_pt(f, 2.0, 2.0)
+    # f = add_pt(f, 1.0, 0.0)
+    # f = add_pt(f, 1.0, 1.0)
+    # f = add_pt(f, 3.0, 2.0)
     # f = add_pt(f, 0.0, 1.0)
 
     while True:

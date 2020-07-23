@@ -83,13 +83,12 @@ class Rectangle:
             crossing_points.append(crossing_points_left[1])
             #print("AddOK4")
         # Оставляем только уникальные точки
-        # crossing_points = self.uniq(crossing_points)
         for point in crossing_points:
             #print('Checking point:', point)
             #print(self.add_common_point(point))
             self.add_common_point(point)
-        #print('Rect Deque:', self.common_points.size())
-        #print('Common area:', self.common_area())
+            #print('Rect Deque:', self.common_points.size())
+            #print('Common area:', self.common_area())
 
     def add_inside(self, a, b, c):
         """
@@ -110,7 +109,7 @@ class Rectangle:
     def add_outside(self, a):
         """
         Проверяем, является ли наш прямоугольник внешним по отношению к точке выпуклой оболочки
-        Т.е. другим словами, лежит ли точка "a" внутри нашего прямоугольника.
+        Т.е. другими словами, лежит ли точка "a" внутри нашего прямоугольника.
         И если да, то добавляем ее в список общих точек
         """
         # метод R2Point для проверки лежит ли точка внутри правильного прямоугольника
@@ -119,14 +118,6 @@ class Rectangle:
             self.add_common_point(a)
             #print('Rect Deque (outer point):', self.common_points.size())
             #print('Common area (outer point):', self.common_area())
-
-    # Оставляем только уникальные значения в списк
-    def uniq(self, lst):
-        tmp = []
-        for t in lst:
-            if t not in tmp:
-                tmp.append(t)
-        return tmp
 
     def find_crossing_seg(self, a, b, q, p):
         """
